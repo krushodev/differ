@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import type { FileNode, DiffResult } from '@/core/types.ts';
+import type { FileNodeMeta, DiffResult } from '@/core/types.ts';
 import { useProjectStore } from '@/store/useProjectStore.ts';
 import { FileTreeNode } from './FileTreeNode.tsx';
 import type { TreeNode } from './FileTreeNode.tsx';
 
-function buildTree(files: FileNode[], results: DiffResult[], side: 'A' | 'B'): TreeNode {
+function buildTree(files: FileNodeMeta[], results: DiffResult[], side: 'A' | 'B'): TreeNode {
   const root: TreeNode = { name: 'root', path: '', isDirectory: true, children: [] };
 
   const changeMap = new Map<string, string>();
@@ -41,11 +41,14 @@ function buildTree(files: FileNode[], results: DiffResult[], side: 'A' | 'B'): T
 }
 
 export function FileTreePanel() {
-  const { projectA, projectB, results, setSelectedResult } = useProjectStore();
+  const { projectA, projectB, projectAMeta, projectBMeta, results, setSelectedResult } = useProjectStore();
 
-  const treeA = useMemo(() => (projectA ? buildTree(projectA.files, results, 'A') : null), [projectA, results]);
+  const dataA = projectA ?? projectAMeta;
+  const dataB = projectB ?? projectBMeta;
 
-  const treeB = useMemo(() => (projectB ? buildTree(projectB.files, results, 'B') : null), [projectB, results]);
+  const treeA = useMemo(() => (dataA ? buildTree(dataA.files, results, 'A') : null), [dataA, results]);
+
+  const treeB = useMemo(() => (dataB ? buildTree(dataB.files, results, 'B') : null), [dataB, results]);
 
   const handleSelect = (path: string) => {
     const match = results.find(r => r.pathA === path || r.pathB === path);
@@ -58,7 +61,7 @@ export function FileTreePanel() {
     <div className="space-y-4">
       {treeA && (
         <div>
-          <h4 className="text-xs font-medium text-zinc-400 uppercase tracking-wider px-2 mb-1">{projectA?.name} (Base)</h4>
+          <h4 className="text-xs font-medium text-zinc-400 uppercase tracking-wider px-2 mb-1">{dataA?.name} (Base)</h4>
           <div className="max-h-[300px] overflow-auto">
             {treeA.children.map(node => (
               <FileTreeNode key={node.path} node={node} depth={0} onSelect={handleSelect} />
@@ -68,7 +71,7 @@ export function FileTreePanel() {
       )}
       {treeB && (
         <div>
-          <h4 className="text-xs font-medium text-zinc-400 uppercase tracking-wider px-2 mb-1">{projectB?.name} (Updated)</h4>
+          <h4 className="text-xs font-medium text-zinc-400 uppercase tracking-wider px-2 mb-1">{dataB?.name} (Updated)</h4>
           <div className="max-h-[300px] overflow-auto">
             {treeB.children.map(node => (
               <FileTreeNode key={node.path} node={node} depth={0} onSelect={handleSelect} />

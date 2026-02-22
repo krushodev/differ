@@ -18,6 +18,14 @@ export interface FileNode {
   isDirectory: boolean;
 }
 
+export interface FileNodeMeta {
+  path: string;
+  name: string;
+  hash: string;
+  size: number;
+  isDirectory: boolean;
+}
+
 export interface LineDiff {
   type: 'add' | 'remove' | 'equal';
   value: string;

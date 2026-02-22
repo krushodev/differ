@@ -56,12 +56,12 @@ function DropZone({ label, projectData, onPickDirectory, onFileUpload }: DropZon
       className={cn(
         'flex flex-col items-center justify-center gap-4 p-8 rounded-xl border-2 border-dashed transition-colors min-h-[220px]',
         loading
-          ? 'border-zinc-500 bg-zinc-900/50'
+          ? 'border-zinc-500 bg-zinc-900/50 backdrop-blur-xl'
           : projectData
-            ? 'border-emerald-500/50 bg-emerald-500/5'
+            ? 'border-emerald-500/50 bg-emerald-500/5 backdrop-blur-xl shadow-lg shadow-emerald-900/10'
             : dragOver
-              ? 'border-emerald-400 bg-emerald-500/5'
-              : 'border-zinc-700 bg-zinc-900/50 hover:border-zinc-500'
+              ? 'border-emerald-400 bg-emerald-500/10 backdrop-blur-xl shadow-xl shadow-emerald-500/10'
+              : 'border-white/10 bg-white/5 backdrop-blur-xl hover:border-white/20 shadow-lg shadow-black/20'
       )}
       onDragOver={e => {
         e.preventDefault();

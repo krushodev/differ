@@ -12,8 +12,11 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-virtual": "^3.13.18",
+    "@types/dagre": "^0.7.53",
+    "@xyflow/react": "^12.10.1",
     "autoprefixer": "^10.4.24",
     "clsx": "^2.1.1",
+    "dagre": "^0.8.5",
     "diff-match-patch": "^1.0.5",
     "framer-motion": "^12.34.2",
     "jszip": "^3.10.1",
@@ -24,6 +27,7 @@
     "tailwind-merge": "^3.4.1",
     "tailwindcss": "^4.1.18",
     "wouter": "^3.9.0",
+    "xxhash-wasm": "^1.1.0",
     "zustand": "^5.0.11"
   },
   "devDependencies": {

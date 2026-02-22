@@ -19,8 +19,7 @@ export function SummaryCards() {
   const { results, filterType, setFilterType } = useProjectStore();
 
   const cards = useMemo((): CardData[] => {
-    const count = (types: string[]) =>
-      results.filter((r: DiffResult) => types.includes(r.changeType)).length;
+    const count = (types: string[]) => results.filter((r: DiffResult) => types.includes(r.changeType)).length;
 
     return [
       {
@@ -29,7 +28,7 @@ export function SummaryCards() {
         icon: <FilePlus2 className="w-5 h-5" />,
         color: 'text-emerald-400',
         bgColor: 'bg-emerald-500/10 border-emerald-500/20',
-        filterType: ChangeType.Added,
+        filterType: ChangeType.Added
       },
       {
         label: 'Modified',
@@ -37,7 +36,7 @@ export function SummaryCards() {
         icon: <FileEdit className="w-5 h-5" />,
         color: 'text-amber-400',
         bgColor: 'bg-amber-500/10 border-amber-500/20',
-        filterType: ChangeType.Modified,
+        filterType: ChangeType.Modified
       },
       {
         label: 'Deleted',
@@ -45,7 +44,7 @@ export function SummaryCards() {
         icon: <FileX2 className="w-5 h-5" />,
         color: 'text-red-400',
         bgColor: 'bg-red-500/10 border-red-500/20',
-        filterType: ChangeType.Deleted,
+        filterType: ChangeType.Deleted
       },
       {
         label: 'Moved',
@@ -53,8 +52,8 @@ export function SummaryCards() {
         icon: <FileSymlink className="w-5 h-5" />,
         color: 'text-blue-400',
         bgColor: 'bg-blue-500/10 border-blue-500/20',
-        filterType: ChangeType.Moved,
-      },
+        filterType: ChangeType.Moved
+      }
     ];
   }, [results]);
 
@@ -69,9 +68,7 @@ export function SummaryCards() {
           onClick={() => setFilterType(filterType === card.filterType ? null : card.filterType)}
           className={cn(
             'flex items-center gap-3 p-4 rounded-lg border transition-all text-left',
-            filterType === card.filterType
-              ? card.bgColor
-              : 'bg-zinc-900/50 border-zinc-800 hover:border-zinc-700',
+            filterType === card.filterType ? card.bgColor : 'bg-white/5 backdrop-blur-xl border-white/10 hover:border-white/15 hover:ring-1 hover:ring-white/5 shadow-lg shadow-black/20'
           )}
         >
           <div className={card.color}>{card.icon}</div>

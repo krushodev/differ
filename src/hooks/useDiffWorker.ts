@@ -4,7 +4,7 @@ import type { FileNode, WorkerResponse } from '@/core/types.ts';
 
 export function useDiffWorker() {
   const workerRef = useRef<Worker | null>(null);
-  const { setResults, setProgress, setIsProcessing, setError } = useProjectStore();
+  const { setResults, setProgress, setIsProcessing, setError, releaseContent } = useProjectStore();
 
   const analyze = useCallback(
     (filesA: FileNode[], filesB: FileNode[]): Promise<void> => {
@@ -29,6 +29,7 @@ export function useDiffWorker() {
               break;
             case 'result':
               setResults(msg.data);
+              releaseContent();
               setIsProcessing(false);
               setProgress(null);
               worker.terminate();
@@ -58,7 +59,7 @@ export function useDiffWorker() {
         worker.postMessage({ type: 'analyze', projectA: filesA, projectB: filesB });
       });
     },
-    [setResults, setProgress, setIsProcessing, setError]
+    [setResults, setProgress, setIsProcessing, setError, releaseContent]
   );
 
   return { analyze };

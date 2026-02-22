@@ -6,7 +6,7 @@ const dmp = new DiffMatchPatch();
 function normalizeWhitespace(text: string): string {
   return text
     .split('\n')
-    .map((line) => line.replace(/\s+$/g, '').replace(/\t/g, '  '))
+    .map(line => line.replace(/\s+$/g, '').replace(/\t/g, '  '))
     .join('\n');
 }
 
@@ -14,7 +14,9 @@ export function computeLineDiffs(contentA: string, contentB: string): LineDiff[]
   const normA = normalizeWhitespace(contentA);
   const normB = normalizeWhitespace(contentB);
 
-  const diffs = dmp.diff_main(normA, normB);
+  const { chars1, chars2, lineArray } = dmp.diff_linesToChars_(normA, normB);
+  const diffs = dmp.diff_main(chars1, chars2, false);
+  dmp.diff_charsToLines_(diffs, lineArray);
   dmp.diff_cleanupSemantic(diffs);
 
   const lineDiffs: LineDiff[] = [];

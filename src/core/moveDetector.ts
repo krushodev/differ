@@ -6,18 +6,27 @@ export interface MoveMatch {
   contentChanged: boolean;
 }
 
-export function detectMoves(
-  onlyInA: FileNode[],
-  onlyInB: FileNode[],
-): MoveMatch[] {
+export function detectMoves(onlyInA: FileNode[], onlyInB: FileNode[]): MoveMatch[] {
   const moves: MoveMatch[] = [];
   const matchedA = new Set<string>();
   const matchedB = new Set<string>();
 
+  const bByName = new Map<string, FileNode[]>();
+  for (const b of onlyInB) {
+    const arr = bByName.get(b.name);
+    if (arr) {
+      arr.push(b);
+    } else {
+      bByName.set(b.name, [b]);
+    }
+  }
+
   for (const a of onlyInA) {
-    for (const b of onlyInB) {
+    const candidates = bByName.get(a.name);
+    if (!candidates) continue;
+    for (const b of candidates) {
       if (matchedB.has(b.path)) continue;
-      if (a.name === b.name && a.hash === b.hash && a.path !== b.path) {
+      if (a.hash === b.hash && a.path !== b.path) {
         moves.push({ fileA: a, fileB: b, contentChanged: false });
         matchedA.add(a.path);
         matchedB.add(b.path);
@@ -28,9 +37,11 @@ export function detectMoves(
 
   for (const a of onlyInA) {
     if (matchedA.has(a.path)) continue;
-    for (const b of onlyInB) {
+    const candidates = bByName.get(a.name);
+    if (!candidates) continue;
+    for (const b of candidates) {
       if (matchedB.has(b.path)) continue;
-      if (a.name === b.name && a.hash !== b.hash && a.path !== b.path) {
+      if (a.hash !== b.hash && a.path !== b.path) {
         moves.push({ fileA: a, fileB: b, contentChanged: true });
         matchedA.add(a.path);
         matchedB.add(b.path);
